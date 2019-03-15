@@ -20,87 +20,85 @@ namespace BankAccounts
 
 
     public class BankAccount
+    { 
+    private string m_customerName;
+
+    private double m_balance;
+
+    private bool m_frozen = false;
+
+    private BankAccount()
     {
-        public const string DebitAmountExceedsBalanceMessage = "Debit amount exceeds balance";
-        public const string DebitAmountLessThanZeroMessage = "Debit amount is less than zero";
-        private string m_customerName;
+    }
 
-        private double m_balance;
+    public BankAccount(string customerName, double balance)
+    {
+        m_customerName = customerName;
+        m_balance = balance;
+    }
 
-        private bool m_frozen = false;
+    public string CustomerName
+    {
+        get { return m_customerName; }
+    }
 
-        private BankAccount()
+    public double Balance
+    {
+        get { return m_balance; }
+    }
+
+    public void Debit(double amount)
+    {
+        if (m_frozen)
         {
+            throw new Exception("Account frozen");
         }
 
-        public BankAccount(string customerName, double balance)
+        if (amount > m_balance)
         {
-            m_customerName = customerName;
-            m_balance = balance;
+            throw new ArgumentOutOfRangeException("amount");
         }
 
-        public string CustomerName
+        if (amount < 0)
         {
-            get { return m_customerName; }
+            throw new ArgumentOutOfRangeException("amount");
         }
 
-        public double Balance
+        m_balance += amount; // intentionally incorrect code
+    }
+
+    public void Credit(double amount)
+    {
+        if (m_frozen)
         {
-            get { return m_balance; }
+            throw new Exception("Account frozen");
         }
 
-        public void Debit(double amount)
+        if (amount < 0)
         {
-            if (m_frozen)
-            {
-                throw new Exception("Account frozen");
-            }
-
-            if (amount > m_balance)
-            {
-                throw new ArgumentOutOfRangeException("amount", amount, DebitAmountExceedsBalanceMessage);
-            }
-
-            if (amount < 0)
-            {
-                throw new ArgumentOutOfRangeException("amount", amount, DebitAmountLessThanZeroMessage);
-            }
-
-            m_balance -= amount; // intentionally incorrect code
+            throw new ArgumentOutOfRangeException("amount");
         }
 
-        public void Credit(double amount)
-        {
-            if (m_frozen)
-            {
-                throw new Exception("Account frozen");
-            }
+        m_balance += amount;
+    }
 
-            if (amount < 0)
-            {
-                throw new ArgumentOutOfRangeException("amount");
-            }
+    private void FreezeAccount()
+    {
+        m_frozen = true;
+    }
 
-            m_balance += amount;
-        }
+    private void UnfreezeAccount()
+    {
+        m_frozen = false;
+    }
 
-        private void FreezeAccount()
-        {
-            m_frozen = true;
-        }
+    public static void Main()
+    {
+        BankAccount ba = new BankAccount("Mr. Bryan Walton", 11.99);
 
-        private void UnfreezeAccount()
-        {
-            m_frozen = false;
-        }
-
-        public static void Main()
-        {
-            BankAccount ba = new BankAccount("Mr. Bryan Walton", 11.99);
-
-            ba.Credit(5.77);
-            ba.Debit(11.22);
-            Console.WriteLine("Current balance is ${0}", ba.Balance);
-        }
+        ba.Credit(5.77);
+        ba.Debit(11.22);
+        Console.WriteLine("Current balance is ${0}", ba.Balance);
     }
 }
+} 
