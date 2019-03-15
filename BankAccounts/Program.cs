@@ -6,10 +6,62 @@ using System.Threading.Tasks;
 
 namespace BankAccounts
 {
-    class Program
+
+    //C0732104-C0728432
+
+
+
+
+    //Assignment03-A
+
+
+    //Angad Singh- C0732104
+    //Labhwinder Singh - C0728432
+
+
+    public class BankAccount
     {
-        static void Main(string[] args)
+        private string m_customerName;
+
+        private double m_balance;
+
+        private bool m_frozen = false;
+
+        private BankAccount()
         {
         }
-    }
-}
+
+        public BankAccount(string customerName, double balance)
+        {
+            m_customerName = customerName;
+            m_balance = balance;
+        }
+
+        public string CustomerName
+        {
+            get { return m_customerName; }
+        }
+
+        public double Balance
+        {
+            get { return m_balance; }
+        }
+        public void Debit(double amount)
+        {
+            if (m_frozen)
+            {
+                throw new Exception("Account frozen");
+            }
+
+            if (amount > m_balance)
+            {
+                throw new ArgumentOutOfRangeException("amount");
+            }
+
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException("amount");
+            }
+
+            m_balance -= amount; // intentionally incorrect code
+        }
